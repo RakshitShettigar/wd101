@@ -61,7 +61,7 @@ form.addEventListener('submit', function(event) {
     // Save the updated array back to localStorage
     localStorage.setItem('users', JSON.stringify(users));
 
-    // Load the updated user data into the table
+    // Load the updated user data into the table immediately
     loadUserData();
 
     // Optionally, reset the form
