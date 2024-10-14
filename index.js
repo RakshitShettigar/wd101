@@ -15,24 +15,23 @@ function validateAge(dob) {
 
 // Load data from localStorage and populate the table
 function loadUserData() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) return; // If no user is found, exit the function
-
+    const users = JSON.parse(localStorage.getItem('users')) || []; // Retrieve array of users from localStorage
     const tableBody = document.querySelector('#userTable tbody');
     tableBody.innerHTML = ''; // Clear the existing content
 
-    // Insert a row with the saved user data
-    const row = `
-        <tr>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.password}</td>
-            <td>${user.dob}</td>
-            <td>${user.termsAccepted}</td>
-        </tr>
-    `;
-
-    tableBody.innerHTML += row; // Append the row to the table body
+    // Insert a row for each saved user
+    users.forEach(user => {
+        const row = `
+            <tr>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.password}</td>
+                <td>${user.dob}</td>
+                <td>${user.termsAccepted ? 'Yes' : 'No'}</td>
+            </tr>
+        `;
+        tableBody.innerHTML += row; // Append the row to the table body
+    });
 }
 
 // Handle form submission
@@ -52,12 +51,21 @@ form.addEventListener('submit', function(event) {
         return;
     }
 
-    // Save the form data to localStorage
-    const user = { name, email, password, dob, termsAccepted };
-    localStorage.setItem('user', JSON.stringify(user));
+    // Retrieve existing users or initialize an empty array
+    const users = JSON.parse(localStorage.getItem('users')) || [];
 
-    // Load the user data into the table
+    // Add the new user to the array
+    const user = { name, email, password, dob, termsAccepted };
+    users.push(user);
+
+    // Save the updated array back to localStorage
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Load the updated user data into the table
     loadUserData();
+
+    // Optionally, reset the form
+    form.reset();
 });
 
 // Load data into the table when the page is loaded
